@@ -24,7 +24,7 @@
 
   time.timeZone = "US/Eastern";
 
-  environment.systemPackages = with pkgs; [ wget vim git tmux ];
+  environment.systemPackages = with pkgs; [ wget vim git tmux cargo rustc rustfmt ];
 
   programs.bash.enableCompletion = true;
   programs.mtr.enable = true;
