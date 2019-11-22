@@ -14,7 +14,6 @@
   networking.useDHCP = false;
   networking.wireless.enable = false;
   networking.interfaces.eno1.useDHCP = true;
-  networking.interfaces.wlo2.useDHCP = true;
 
   i18n = {
     consoleFont = "Lat2-Terminus16";
