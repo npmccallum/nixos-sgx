@@ -38,6 +38,10 @@
   security.pam.services.login.makeHomeDir = true;
   security.pam.services.sshd.makeHomeDir = true;
 
+  # Make an SGX group for /dev/sgx/* access.
+  services.udev.extraRules = ''SUBSYSTEM=="sgx", MODE="0660", GROUP="sgx"'';
+  users.groups.sgx = {};
+
   users.mutableUsers = false;
   users.users.npmccallum = {
     isNormalUser = true;
