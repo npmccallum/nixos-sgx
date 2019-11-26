@@ -30,7 +30,7 @@
   users.users = {
     npmccallum = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "sgx" ];
+      extraGroups = [ "wheel" ];
       subUidRanges = [{ startUid = 100000; count = 10000; }];
       subGidRanges = [{ startGid = 100000; count = 10000; }];
       openssh.authorizedKeys.keys = [
@@ -39,7 +39,6 @@
     };
     mbestavros = {
       isNormalUser = true;
-      extraGroups = [ "sgx" ];
       subUidRanges = [{ startUid = 110000; count = 10000; }];
       subGidRanges = [{ startGid = 110000; count = 10000; }];
       openssh.authorizedKeys.keys = [
@@ -48,7 +47,6 @@
     };
     lsturman = {
       isNormalUser = true;
-      extraGroups = [ "sgx" ];
       subUidRanges = [{ startUid = 120000; count = 10000; }];
       subGidRanges = [{ startGid = 120000; count = 10000; }];
       openssh.authorizedKeys.keys = [

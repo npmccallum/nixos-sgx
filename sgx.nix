@@ -1,8 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  services.udev.extraRules = ''SUBSYSTEM=="sgx", MODE="0660", GROUP="sgx"'';
-  users.groups.sgx = {};
+  services.udev.extraRules = ''SUBSYSTEM=="sgx", MODE="0666"'';
 
   boot.kernelPackages = let
       linux_sgx_pkg = { stdenv, fetchurl, buildLinux, ... } @ args:
