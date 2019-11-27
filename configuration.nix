@@ -4,7 +4,22 @@
 
 { config, pkgs, ... }:
 
-{
+let
+  posh = global_args: run_args: image: (pkgs.writeScriptBin "posh" ''
+      #! ${pkgs.bash}/bin/bash
+      source /etc/profile
+      tty -s && tty="-t" || quiet="-q"
+      ${pkgs.podman}/bin/podman system migrate
+      ${pkgs.podman}/bin/podman pull $quiet ${image} >/dev/null
+      shift
+      exec ${pkgs.podman}/bin/podman ${global_args} run --rm -i $tty -v ~/:/root -w /root --network host ${run_args} ${image} $@
+    '')
+    .overrideAttrs(attrs: attrs // {
+        passthru = {
+          shellPath = "/bin/posh";
+        };
+    });
+in {
   imports = [ ./hardware-configuration.nix ./sshonly.nix ./ddns.nix ./sgx.nix ./podman.nix ];
   system.stateVersion = "19.09";
 
@@ -28,9 +43,16 @@
   programs.bash.enableCompletion = true;
 
   users.users = {
-    npmccallum = {
+    admin = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [
+        "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIoZP5bZedmrj/lidLkKXhvZwwl9Pj5VxLV22nXhkijt7UJhSUX/rOV4Kg/wmR5ptMjGyE4PPSHmCEzXvQnpyMU= nathaniel@mccallum.life"
+      ];
+    };
+    npmccallum = {
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
+      isNormalUser = true;
       subUidRanges = [{ startUid = 100000; count = 10000; }];
       subGidRanges = [{ startGid = 100000; count = 10000; }];
       openssh.authorizedKeys.keys = [
