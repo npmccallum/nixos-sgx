@@ -9,7 +9,6 @@ let
       #! ${pkgs.bash}/bin/bash
       source /etc/profile
       tty -s && tty="-t" || quiet="-q"
-      ${pkgs.podman}/bin/podman system migrate
       ${pkgs.podman}/bin/podman pull $quiet ${image} >/dev/null
       shift
       exec ${pkgs.podman}/bin/podman ${global_args} run --rm -i $tty -v ~/:/root -w /root --network host ${run_args} ${image} $@
