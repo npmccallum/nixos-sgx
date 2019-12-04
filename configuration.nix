@@ -60,6 +60,7 @@ in {
       ];
     };
     mbestavros = {
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
       isNormalUser = true;
       subUidRanges = [{ startUid = 110000; count = 10000; }];
       subGidRanges = [{ startGid = 110000; count = 10000; }];
@@ -68,6 +69,7 @@ in {
       ];
     };
     lsturman = {
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
       isNormalUser = true;
       subUidRanges = [{ startUid = 120000; count = 10000; }];
       subGidRanges = [{ startGid = 120000; count = 10000; }];
