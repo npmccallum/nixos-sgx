@@ -9,9 +9,10 @@ let
       #! ${pkgs.bash}/bin/bash
       source /etc/profile
       tty -s && tty="-t" || quiet="-q"
+      test -S "$SSH_AUTH_SOCK" && ssh="-v $SSH_AUTH_SOCK:$SSH_AUTH_SOCK -e SSH_AUTH_SOCK"
       ${pkgs.podman}/bin/podman pull $quiet ${image} >/dev/null
       shift
-      exec ${pkgs.podman}/bin/podman ${global_args} run --rm -i $tty -v ~/:/root -w /root --network host ${run_args} ${image} $@
+      exec ${pkgs.podman}/bin/podman ${global_args} run --rm -i $tty $ssh -v ~/:/root -w /root --network host ${run_args} ${image} $@
     '')
     .overrideAttrs(attrs: attrs // {
         passthru = {
