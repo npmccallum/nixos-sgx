@@ -5,22 +5,16 @@
 { config, pkgs, ... }:
 
 let
-  posh = global_args: run_args: image: (pkgs.writeScriptBin "posh" ''
-      #! ${pkgs.bash}/bin/bash
-      source /etc/profile
-      tty -s && tty="-t" || quiet="-q"
-      test -S "$SSH_AUTH_SOCK" && ssh="-v $SSH_AUTH_SOCK:$SSH_AUTH_SOCK -e SSH_AUTH_SOCK"
-      ${pkgs.podman}/bin/podman pull $quiet ${image} >/dev/null
-      shift
-      exec ${pkgs.podman}/bin/podman ${global_args} run --rm -i $tty $ssh -v ~/:/root -w /root --network host ${run_args} ${image} $@
-    '')
-    .overrideAttrs(attrs: attrs // {
-        passthru = {
-          shellPath = "/bin/posh";
-        };
-    });
-in {
-  imports = [ ./hardware-configuration.nix ./sshonly.nix ./ddns.nix ./sgx.nix ./podman.nix ];
+  steveej_repo = import ((import <nixpkgs> {}).fetchgit {
+      url = "https://gitlab.com/steveeJ/infra.git";
+      rev = "72f2fae5e903b82e3b2f55a49b54428158945fea";
+      sha256 = "080l1zm3mv1p7dx8s12pjavzx2jh4jfmybd02f67s9clzbaygpqg";
+    }) { inherit pkgs; }; in {
+  nixpkgs.overlays = [
+    steveej_repo.overlays.posh
+    (self: super: { steveej_pkgs = steveej_repo.pkgs; } )
+  ];
+  imports = [ ./hardware-configuration.nix ./sshonly.nix ./ddns.nix ./sgx.nix ];
   system.stateVersion = "19.09";
 
   boot.loader.systemd-boot.enable = true;
@@ -42,7 +36,9 @@ in {
 
   programs.bash.enableCompletion = true;
 
-  users.users = {
+  users.users = let
+    posh = pkgs.posh { image = "quay.io/enarx/fedora"; global_args = "--device /dev/sgx/enclave"; };
+    in {
     admin = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
@@ -51,7 +47,7 @@ in {
       ];
     };
     npmccallum = {
-      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
+      shell = posh;
       isNormalUser = true;
       subUidRanges = [{ startUid = 100000; count = 10000; }];
       subGidRanges = [{ startGid = 100000; count = 10000; }];
@@ -60,7 +56,7 @@ in {
       ];
     };
     mbestavros = {
-      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
+      shell = posh;
       isNormalUser = true;
       subUidRanges = [{ startUid = 110000; count = 10000; }];
       subGidRanges = [{ startGid = 110000; count = 10000; }];
@@ -69,7 +65,7 @@ in {
       ];
     };
     lsturman = {
-      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
+      shell = posh;
       isNormalUser = true;
       subUidRanges = [{ startUid = 120000; count = 10000; }];
       subGidRanges = [{ startGid = 120000; count = 10000; }];
