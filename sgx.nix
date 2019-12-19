@@ -13,8 +13,8 @@
           modDirVersion = "5.4.0-rc3";
 
           src = fetchurl {
-            url = "https://github.com/jsakkine-intel/linux-sgx/archive/v23.tar.gz";
-            sha256 = "11rwlwv7s071ia889dk1dgrxprxiwgi7djhg47vi56dj81jgib20";
+            url = "https://github.com/jsakkine-intel/linux-sgx/archive/v24.tar.gz";
+            sha256 = "17aacpw8jd9v29knwkbjcc4pl3nhi45jn3w9sbcc2199r688yyda";
           };
           kernelPatches = [];
 
@@ -28,5 +28,3 @@
     in
       pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_sgx);
 }
-
-
