@@ -25,6 +25,7 @@ in {
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernel.sysctl = { "fs.inotify.max_user_watches" = "524288"; };
 
   networking.useDHCP = false;
   networking.wireless.enable = false;
