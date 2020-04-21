@@ -79,7 +79,7 @@ in {
       ];
     };
     ckuehl = {
-      shell = posh "" "--device /dev/kvm" "quay.io/enarx/fedora";
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
       isNormalUser = true;
       subUidRanges = [{ startUid = 130000; count = 10000; }];
       subGidRanges = [{ startGid = 130000; count = 10000; }];
@@ -88,7 +88,7 @@ in {
       ];
     };
     bdas = {
-      shell = posh "" "--device /dev/kvm" "quay.io/enarx/fedora";
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
       isNormalUser = true;
       subUidRanges = [{ startUid = 140000; count = 10000; }];
       subGidRanges = [{ startGid = 140000; count = 10000; }];
@@ -97,7 +97,7 @@ in {
       ];
     };
     harald = {
-      shell = posh "" "--device /dev/kvm" "quay.io/enarx/fedora";
+      shell = posh "" "--device /dev/sgx/enclave" "quay.io/enarx/fedora";
       isNormalUser = true;
       subUidRanges = [{ startUid = 150000; count = 10000; }];
       subGidRanges = [{ startGid = 150000; count = 10000; }];
